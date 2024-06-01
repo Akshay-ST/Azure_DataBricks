@@ -1,0 +1,23 @@
+{
+	"name": "ADLS__SINK_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Retail_Analytics_ADLS_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Retail_Analytics_Output",
+				"fileSystem": "output"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
