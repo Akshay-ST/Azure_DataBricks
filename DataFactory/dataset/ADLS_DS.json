@@ -1,0 +1,76 @@
+{
+	"name": "ADLS_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Retail_Analytics_ADLS_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Retail_Transactions_Dataset.csv",
+				"fileSystem": "input"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Transaction_ID",
+				"type": "String"
+			},
+			{
+				"name": "Date",
+				"type": "String"
+			},
+			{
+				"name": "Customer_Name",
+				"type": "String"
+			},
+			{
+				"name": "Product",
+				"type": "String"
+			},
+			{
+				"name": "Total_Items",
+				"type": "String"
+			},
+			{
+				"name": "Total_Cost",
+				"type": "String"
+			},
+			{
+				"name": "Payment_Method",
+				"type": "String"
+			},
+			{
+				"name": "City",
+				"type": "String"
+			},
+			{
+				"name": "Store_Type",
+				"type": "String"
+			},
+			{
+				"name": "Discount_Applied",
+				"type": "String"
+			},
+			{
+				"name": "Customer_Category",
+				"type": "String"
+			},
+			{
+				"name": "Season",
+				"type": "String"
+			},
+			{
+				"name": "Promotion",
+				"type": "String"
+			}
+		]
+	}
+}
