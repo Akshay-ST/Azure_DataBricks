@@ -1,0 +1,44 @@
+-- Databricks notebook source
+-- MAGIC %python
+-- MAGIC # Databricks notebook source
+-- MAGIC
+-- MAGIC dbutils.widgets.text("sourcefilepath","")
+-- MAGIC dbutils.widgets.text("targetfilepath","")
+-- MAGIC
+-- MAGIC source_path=dbutils.widgets.get("sourcefilepath")
+-- MAGIC target_path=dbutils.widgets.get("targetfilepath")
+-- MAGIC print(source_path)
+-- MAGIC print(target_path)
+-- MAGIC
+-- MAGIC # COMMAND ----------
+-- MAGIC
+-- MAGIC from pyspark.sql.functions import col
+-- MAGIC def remove_bda_chars_from_columns(df):
+-- MAGIC     return  df.select([col(x).alias(x.replace(" ", "_").replace("/", "").replace("%", "pct").replace("(", "").replace(")", "")) for x in df.columns])
+-- MAGIC
+-- MAGIC
+-- MAGIC # COMMAND ----------
+-- MAGIC
+-- MAGIC # DBTITLE 1,Reading from Azure Data lake using PySpark
+-- MAGIC
+-- MAGIC #/mnt/dev/organizations-10000_1.csv
+-- MAGIC org_df = spark.read.option("delimiter",",").option("header",True).csv(f"/mnt/dev/organizations-10000_1.csv")
+-- MAGIC org_df.withColumnRenamed("Organization Id","Organization_Id").withColumnRenamed("Number of employees","Number_of_employees")
+-- MAGIC display(org_df)
+-- MAGIC final_df=remove_bda_chars_from_columns(org_df)
+-- MAGIC
+-- MAGIC
+-- MAGIC
+-- MAGIC
+-- MAGIC # COMMAND ----------
+-- MAGIC
+-- MAGIC # DBTITLE 1,Writing into Azure Data lake using PySpark
+-- MAGIC #final_df.write.mode("overwrite").format("delta").option("header",True).save("dbfs:/Azure_Training/org_file")
+-- MAGIC
+-- MAGIC # COMMAND ----------
+-- MAGIC
+-- MAGIC
+-- MAGIC #dbfs:/Azure_Training/org_file
+-- MAGIC final_df.write.mode("overwrite").format("delta").option("header",True).save(f"dbfs:/Azure_Training/org_file")
+-- MAGIC
+-- MAGIC # COMMAND ----------
