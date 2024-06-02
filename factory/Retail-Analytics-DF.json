@@ -1,9 +1,0 @@
-{
-	"name": "Retail-Analytics-DF",
-	"location": "centralindia",
-	"identity": {
-		"type": "SystemAssigned",
-		"principalId": "f68fe458-cdb2-4b21-a130-d0b38d8613fb",
-		"tenantId": "27cbcbfa-0a89-4ab5-87e7-219dcca2f62b"
-	}
-}
