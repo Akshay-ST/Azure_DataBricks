@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ADLS_CopyDate",
+				"name": "ADLS_CopyData",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
