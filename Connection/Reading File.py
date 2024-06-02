@@ -1,15 +1,13 @@
 # Databricks notebook source
-# MAGIC %python
-# MAGIC storageAccountName = 'ast1storage'
-# MAGIC blobContainerName = 'container1'
-# MAGIC storageAccountAccessKey = 'GSThIGU4jThdtVxIdhuV2P0+0A3ZFv5ZmoLqQ2WhBXxhO7kFWauh7tIXRHA82olRJVacdArviZe0+AStczkIIw=='
-# MAGIC
-# MAGIC dbutils.fs.mount(
-# MAGIC   source = f'wasbs://{blobContainerName}@{storageAccountName}.blob.core.windows.net',
-# MAGIC   mount_point = '/mnt/files/',
-# MAGIC   extra_configs = {'fs.azure.account.key.' + storageAccountName + '.blob.core.windows.net': storageAccountAccessKey}
-# MAGIC )
-# MAGIC
+storageAccountName = 'retailanalyticssa'
+blobContainerName = 'input'
+storageAccountAccessKey = dbutils.secrets.get(scope = "sa_key", key = "sakey")
+
+dbutils.fs.mount(
+  source = f'wasbs://{blobContainerName}@{storageAccountName}.blob.core.windows.net',
+  mount_point = '/mnt/files/',
+  extra_configs = {'fs.azure.account.key.' + storageAccountName + '.blob.core.windows.net': storageAccountAccessKey}
+)
 
 # COMMAND ----------
 
