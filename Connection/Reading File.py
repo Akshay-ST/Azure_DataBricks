@@ -1,29 +1,39 @@
 # Databricks notebook source
+#secret/createScope
 dbutils.secrets.list('sa_key')
 
 # COMMAND ----------
 
 storageAccountName = 'retailanalyticssa'
-blobContainerName = 'input'
+blobContainerName = 'prac'
 storageAccountAccessKey = dbutils.secrets.get(scope = "sa_key", key = "sakey")
 
 dbutils.fs.mount(
   source = f'wasbs://{blobContainerName}@{storageAccountName}.blob.core.windows.net',
-  mount_point = '/mnt/files/',
+  mount_point = '/mnt/files2/',
   extra_configs = {'fs.azure.account.key.' + storageAccountName + '.blob.core.windows.net': storageAccountAccessKey}
 )
 
 # COMMAND ----------
 
-# MAGIC %fs ls '/mnt/files/'
+# MAGIC %fs ls '/mnt/files2/'
 
 # COMMAND ----------
 
-df = spark.read.option("delimiter",",").option("header",True).csv('/mnt/files/news_headlines_20_days.csv')
+# MAGIC %fs head '/mnt/files2/orders1.csv'
 
 # COMMAND ----------
 
-df.write.mode("overwrite").format("delta").option("header",True).option("delta.columnMapping.mode","name").save('dbfs:/Azure_ast/news_file')
+df = spark.read.csv('/mnt/files2/orders1.csv', header=False)
+df.show()
+
+# COMMAND ----------
+
+df.write.mode("overwrite") \
+  .format("delta") \
+  .option("header",True) \
+  .option("delta.columnMapping.mode","name") \
+  .save('dbfs:/Azure_ast/orders_delta')
 
 # COMMAND ----------
 
