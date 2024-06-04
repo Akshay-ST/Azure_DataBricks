@@ -63,10 +63,30 @@ df.write.mode("overwrite") \
 
 # MAGIC %sql 
 # MAGIC create table retail_db.orders_parquet 
-# MAGIC USING PARQUET LOCATION '/mnt/files/parquet/orders.parquet'
+# MAGIC USING PARQUET LOCATION '/mnt/files/parquet/orders.parquet/order*'
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC #drop table retail_db.orders_parquet;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from retail_db.orders_parquet limit 10;
 
 # COMMAND ----------
 
 # MAGIC %sql 
 # MAGIC create table retail_db.orders_delta 
 # MAGIC USING DELTA LOCATION '/mnt/files/delta/orders.delta'
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC #drop table retail_db.orders_delta;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from retail_db.orders_delta limit 10;
