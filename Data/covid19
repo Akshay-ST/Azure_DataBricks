@@ -1,0 +1,23 @@
+date,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative, (0-6)
+
+inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,(7-10)
+
+recovered,dataQualityGrade,lastUpdateEt,dateModified,checkTimeEt,death,(11-16)
+
+hospitalized,dateChecked,totalTestsViral,positiveTestsViral,negativeTestsViral,(17-21)
+
+positiveCasesViral,deathConfirmed,deathProbable,fips,positiveIncrease,(22-26)
+
+negativeIncrease,total,totalTestResults,totalTestResultsIncrease,posNeg,(27-31)
+
+deathIncrease,hospitalizedIncrease,hash,commercialScore,negativeRegularScore,(32-36)
+
+negativeScore,positiveScore,score,grade(37-40)
+
+
+=============================================================================================
+
+state,notes,covid19Site,covid19SiteSecondary,covid19SiteTertiary,
+
+twitter,covid19SiteOld,name,fips,pui,pum
+
