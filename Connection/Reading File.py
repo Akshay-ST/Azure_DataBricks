@@ -1,4 +1,8 @@
 # Databricks notebook source
+dbutils.secrets.list('sa_key')
+
+# COMMAND ----------
+
 storageAccountName = 'retailanalyticssa'
 blobContainerName = 'input'
 storageAccountAccessKey = dbutils.secrets.get(scope = "sa_key", key = "sakey")
