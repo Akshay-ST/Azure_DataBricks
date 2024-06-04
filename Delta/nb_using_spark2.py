@@ -1,5 +1,4 @@
 # Databricks notebook source
-
 dbutils.widgets.text("sourcefilepath","")
 dbutils.widgets.text("targetfilepath","")
 

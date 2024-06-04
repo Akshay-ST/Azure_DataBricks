@@ -57,7 +57,13 @@ df.write.mode("overwrite") \
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC create database retail_db;
+# MAGIC create database if not exist retail_db;
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC create table retail_db.orders_parquet 
+# MAGIC USING PARQUET LOCATION '/mnt/files/parquet/orders.parquet'
 
 # COMMAND ----------
 

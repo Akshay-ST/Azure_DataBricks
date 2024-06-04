@@ -1,5 +1,4 @@
 -- Databricks notebook source
--- Databricks notebook source
 DESCRIBE HISTORY delta.`dbfs:/Azure_Training/org_file`
 
 -- COMMAND ----------
@@ -21,5 +20,3 @@ USING delta
 location 'dbfs:/Azure_Training/org_data_dump'
 AS
 select * from delta.`dbfs:/Azure_Training/org_file`
-
--- COMMAND ----------

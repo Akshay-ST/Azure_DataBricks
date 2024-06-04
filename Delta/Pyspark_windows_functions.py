@@ -1,5 +1,4 @@
 # Databricks notebook source
-
 from pyspark.sql.functions import when,lit
 from pyspark.sql import functions as F
 # File location and type
