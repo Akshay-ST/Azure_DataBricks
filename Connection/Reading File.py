@@ -10,22 +10,18 @@ storageAccountAccessKey = dbutils.secrets.get(scope = "sa_key", key = "sakey")
 
 dbutils.fs.mount(
   source = f'wasbs://{blobContainerName}@{storageAccountName}.blob.core.windows.net',
-  mount_point = '/mnt/files2/',
+  mount_point = '/mnt/files/',
   extra_configs = {'fs.azure.account.key.' + storageAccountName + '.blob.core.windows.net': storageAccountAccessKey}
 )
 
 # COMMAND ----------
 
-# MAGIC %fs ls '/mnt/files2/'
+# MAGIC %fs ls '/mnt/files/'
 
 # COMMAND ----------
 
-# MAGIC %fs head '/mnt/files2/orders1.csv'
+df = spark.read.csv('/mnt/files/orders.csv', header=False)
 
-# COMMAND ----------
-
-df = spark.read.csv('/mnt/files2/orders1.csv', header=False)
-df.show()
 
 # COMMAND ----------
 
@@ -38,16 +34,16 @@ df.write.mode("overwrite") \
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from delta.`dbfs:/Azure_ast/news_file`;
+# MAGIC select * from delta.`dbfs:/Azure_ast/orders_delta`;
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC CREATE TABLE IF NOT EXISTS DEV_DB.news_file1
+# MAGIC CREATE TABLE IF NOT EXISTS DEV_DB.orders_delta
 # MAGIC
-# MAGIC USING DELTA LOCATION 'dbfs:/Azure_ast/news_file1' AS
+# MAGIC USING DELTA LOCATION 'dbfs:/Azure_ast/orders_delta' AS
 # MAGIC
-# MAGIC select * from delta.`dbfs:/Azure_ast/news_file`;
+# MAGIC select * from delta.`dbfs:/Azure_ast/news_orders_deltafile`;
 # MAGIC
 # MAGIC ALTER TABLE DEV_DB.news_file1 SET TBLPROPERTIES ('delta.columnMapping.mode' = 'name');
 # MAGIC
@@ -55,10 +51,10 @@ df.write.mode("overwrite") \
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC INSERT INTO DEV_DB.news_file1 VALUES
-# MAGIC select * from delta."dbfs:/Azure_ast/news_file";
+# MAGIC INSERT INTO DEV_DB.orders_delta VALUES
+# MAGIC select * from delta."dbfs:/Azure_ast/orders_delta";
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from DEV_DB.news_file1;
+# MAGIC select * from DEV_DB.orders_delta;
