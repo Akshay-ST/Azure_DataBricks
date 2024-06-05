@@ -33,6 +33,16 @@ df.write.mode("overwrite") \
 
 # COMMAND ----------
 
+# MAGIC %fs
+# MAGIC ls dbfs:/Azure_ast/
+
+# COMMAND ----------
+
+# MAGIC %fs
+# MAGIC ls dbfs:/mnt/files
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC select * from delta.`dbfs:/Azure_ast/orders_delta`;
 

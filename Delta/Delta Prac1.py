@@ -63,17 +63,22 @@ df.write.mode("overwrite") \
 
 # MAGIC %sql 
 # MAGIC create table retail_db.orders_parquet 
-# MAGIC USING PARQUET LOCATION '/mnt/files/parquet/orders.parquet/order*'
+# MAGIC USING PARQUET LOCATION '/mnt/files/parquet/orders.parquet/o*'
 
 # COMMAND ----------
 
 # MAGIC %sql 
-# MAGIC #drop table retail_db.orders_parquet;
+# MAGIC drop table retail_db.orders_parquet
 
 # COMMAND ----------
 
 # MAGIC %sql
 # MAGIC select * from retail_db.orders_parquet limit 10;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC describe table extended retail_db.orders_parquet
 
 # COMMAND ----------
 
@@ -83,10 +88,56 @@ df.write.mode("overwrite") \
 
 # COMMAND ----------
 
-# MAGIC %sql 
-# MAGIC #drop table retail_db.orders_delta;
+# MAGIC %sql
+# MAGIC select * from retail_db.orders_delta limit 10;
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from retail_db.orders_delta limit 10;
+# MAGIC describe table extended retail_db.orders_delta
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC combining 2 steps into one <br>
+# MAGIC step one - write data from DF <br>
+# MAGIC step two - create a table <br>
+# MAGIC Below statements represent these steps
+
+# COMMAND ----------
+
+df = spark.read.csv('/mnt/files/orders.csv', header = True)
+
+# COMMAND ----------
+
+#step 1
+df.write.mode("overwrite") \
+  .partitionBy("order_status") \
+  .format("delta") \
+  .save("/mnt/files/delta/orders.delta")
+
+# COMMAND ----------
+
+#step 2
+%sql 
+create table retail_db.orders_delta 
+USING DELTA LOCATION '/mnt/files/delta/orders.delta'
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC Now, We will combine these steps below
+
+# COMMAND ----------
+
+df.write \
+.mode("overwrite") \
+.partitionBy("order_status") \
+.format("delta") \
+.option("path",'/mnt/files/delta2/orders.delta') \
+.saveAsTable("retail_db.oders_delta2")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from retail_db.oders_delta2 where order_Status = 'COMPLETE' limit 10;
