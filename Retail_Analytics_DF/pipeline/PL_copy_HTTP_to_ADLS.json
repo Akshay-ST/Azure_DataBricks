@@ -48,13 +48,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "HTTP_DS",
+						"referenceName": "DS_HTTP_IN",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ADLS_CSV_2_DS",
+						"referenceName": "DS_ADLS_OUT_CSV_TAB",
 						"type": "DatasetReference"
 					}
 				]

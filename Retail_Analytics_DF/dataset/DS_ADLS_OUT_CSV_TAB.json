@@ -1,5 +1,5 @@
 {
-	"name": "ADLS_CSV_2_DS",
+	"name": "DS_ADLS_OUT_CSV_TAB",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Retail_Analytics_ADLS_2_LS",

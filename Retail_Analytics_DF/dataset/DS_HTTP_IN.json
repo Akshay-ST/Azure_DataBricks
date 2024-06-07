@@ -1,5 +1,5 @@
 {
-	"name": "HTTP_DS",
+	"name": "DS_HTTP_IN",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "HTTP_LS",

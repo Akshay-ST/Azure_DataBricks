@@ -43,13 +43,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SQL_DS",
+						"referenceName": "DS_SQL_IN",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ADLS_CSV_DS",
+						"referenceName": "DS_ADLS_OUT_CSV",
 						"type": "DatasetReference"
 					}
 				]
