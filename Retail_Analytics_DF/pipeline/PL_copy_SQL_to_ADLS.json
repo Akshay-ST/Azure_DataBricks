@@ -49,7 +49,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DS_ADLS_OUT_CSV",
+						"referenceName": "DS_ADLS_OUTPUT_CSV",
 						"type": "DatasetReference"
 					}
 				]

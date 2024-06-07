@@ -54,7 +54,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DS_ADLS_OUT_CSV_TAB",
+						"referenceName": "DS_ADLS_OUTPUT_CSV_TAB",
 						"type": "DatasetReference"
 					}
 				]
