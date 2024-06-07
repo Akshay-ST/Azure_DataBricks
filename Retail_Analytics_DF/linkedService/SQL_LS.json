@@ -1,0 +1,24 @@
+{
+	"name": "SQL_LS",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "retail-analytics-sql-server.database.windows.net",
+			"database": "retail_sql_db",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"hostNameInCertificate": "",
+			"authenticationType": "SQL",
+			"userName": "retail_admin",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "KV_LS",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sql-pwd"
+			}
+		}
+	}
+}
