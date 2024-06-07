@@ -201,3 +201,147 @@ dbutils.fs.mounts()
 
 # MAGIC %sql
 # MAGIC describe extended retail_db.orders_bronze;
+
+# COMMAND ----------
+
+
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from table_changes("retail_db.orders_bronze", 1) limit 7;
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC Next Step is to take changes in bronze table and merge it to Silver table
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC create or replace temporary view orders_bronze_Changes as 
+# MAGIC select * from table_changes("retail_db.orders_bronze", 1)
+# MAGIC where order_id > 0 and customer_id > 0
+# MAGIC and order_status in ("PAYMENT_REVIEW","PROCESSING","CLOSED","SUSPECTED_FRAUD","PENDING","CANCELLED","PENDING_PAYMENT","COMPLETE")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select count(*) from orders_bronze_changes;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC desc retail_db.orders_silver;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC MERGE INTO retail_db.orders_silver tgt
+# MAGIC USING orders_bronze_changes src ON tgt.order_id = src.order_id
+# MAGIC WHEN MATCHED
+# MAGIC THEN UPDATE
+# MAGIC   SET tgt.order_status = src.order_status,
+# MAGIC       tgt.customer_id = src.customer_id,
+# MAGIC       tgt.modifiedOn = CURRENT_TIMESTAMP()
+# MAGIC WHEN NOT MATCHED
+# MAGIC THEN INSERT (order_id,order_date,customer_id,order_status, createdOn, modifiedOn)
+# MAGIC      VALUES (order_id, order_date, customer_id, order_status, CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP())
+# MAGIC
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from retail_db.orders_silver limit 10;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC desc table retail_db.orders_gold;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC INSERT OVERWRITE TABLE retail_db.orders_gold
+# MAGIC   SELECT
+# MAGIC     customer_id,
+# MAGIC     order_status,
+# MAGIC     order_year,
+# MAGIC     count(order_id) as num_orders
+# MAGIC   FROM retail_db.orders_silver
+# MAGIC   GROUP BY all;
+# MAGIC
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * 
+# MAGIC from retail_db.orders_gold
+# MAGIC order by 1,2,3;
+# MAGIC
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC managing the new file coming in
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC COPY INTO retail_db.orders_bronze FROM (
+# MAGIC   SELECT 
+# MAGIC     order_id::int,
+# MAGIC     order_date::string,
+# MAGIC     customer_id::int,
+# MAGIC     order_status::string,
+# MAGIC     INPUT_FILE_NAME() as filename,
+# MAGIC     CURRENT_TIMESTAMP as createdOn
+# MAGIC   FROM 'dbfs:/mnt/files/orders_4R_new.csv'
+# MAGIC )
+# MAGIC fileformat = CSV
+# MAGIC format_options('header' = 'true')
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC create or replace temporary view orders_bronze_Changes as 
+# MAGIC select * from table_changes("retail_db.orders_bronze", 2)
+# MAGIC where order_id > 0 and customer_id > 0
+# MAGIC and order_status in ("PAYMENT_REVIEW","PROCESSING","CLOSED","SUSPECTED_FRAUD","PENDING","CANCELLED","PENDING_PAYMENT","COMPLETE")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from orders_bronze_changes;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC MERGE INTO retail_db.orders_silver tgt
+# MAGIC USING orders_bronze_changes src ON tgt.order_id = src.order_id
+# MAGIC WHEN MATCHED
+# MAGIC THEN UPDATE
+# MAGIC   SET tgt.order_status = src.order_status,
+# MAGIC       tgt.customer_id = src.customer_id,
+# MAGIC       tgt.modifiedOn = CURRENT_TIMESTAMP()
+# MAGIC WHEN NOT MATCHED
+# MAGIC THEN INSERT (order_id,order_date,customer_id,order_status, createdOn, modifiedOn)
+# MAGIC      VALUES (order_id, order_date, customer_id, order_status, CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP())
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select count(*) from retail_db.orders_gold;
+# MAGIC -- 48,510
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC INSERT OVERWRITE TABLE retail_db.orders_gold
+# MAGIC   SELECT
+# MAGIC     customer_id,
+# MAGIC     order_status,
+# MAGIC     order_year,
+# MAGIC     count(order_id) as num_orders
+# MAGIC   FROM retail_db.orders_silver
+# MAGIC   GROUP BY all;
