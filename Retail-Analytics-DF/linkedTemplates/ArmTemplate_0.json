@@ -248,6 +248,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"fileName": "orders_count.json",
 						"folderPath": "output",
 						"fileSystem": "data"
 					}
