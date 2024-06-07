@@ -234,7 +234,24 @@
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "order_id",
+						"type": "String"
+					},
+					{
+						"name": "order_date",
+						"type": "String"
+					},
+					{
+						"name": "order_customer_id",
+						"type": "String"
+					},
+					{
+						"name": "order_status",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
@@ -282,6 +299,30 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/HTTP_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_JSON_OUTPUT')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "output",
+						"fileSystem": "data"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
 			]
 		},
 		{
@@ -403,6 +444,73 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/KV_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataFlow_Orders')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DS_ADLS_OUTPUT_CSV_TAB",
+								"type": "DatasetReference"
+							},
+							"name": "ORDERSINPUT"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DS_JSON_OUTPUT",
+								"type": "DatasetReference"
+							},
+							"name": "sink"
+						}
+					],
+					"transformations": [
+						{
+							"name": "SELECT"
+						},
+						{
+							"name": "aggregateOrdersData"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          order_id as integer,",
+						"          order_date as date,",
+						"          order_customer_id as integer,",
+						"          order_status as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> ORDERSINPUT",
+						"ORDERSINPUT select(mapColumn(",
+						"          order_id,",
+						"          customer_id = order_customer_id,",
+						"          order_status",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SELECT",
+						"SELECT aggregate(groupBy(order_status),",
+						"     Order_Count = count(order_id)) ~> aggregateOrdersData",
+						"aggregateOrdersData sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_OUTPUT_CSV_TAB')]",
+				"[concat(variables('factoryId'), '/datasets/DS_JSON_OUTPUT')]"
 			]
 		}
 	]
