@@ -153,4 +153,51 @@ dbutils.fs.mounts()
 
 # COMMAND ----------
 
+# MAGIC %fs
+# MAGIC ls dbfs:/mnt/files/
 
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC show tables;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from retail_db.orders_bronze;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC COPY INTO retail_db.orders_bronze FROM (
+# MAGIC   SELECT 
+# MAGIC     order_id::int,
+# MAGIC     order_date::string,
+# MAGIC     customer_id::int,
+# MAGIC     order_status::string,
+# MAGIC     INPUT_FILE_NAME() as filename,
+# MAGIC     CURRENT_TIMESTAMP as createdOn
+# MAGIC   FROM 'dbfs:/mnt/files/orders1.csv'
+# MAGIC )
+# MAGIC fileformat = CSV
+# MAGIC format_options('header' = 'true')
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC re running the above command won't insert the data twice, COPT command is smart enough
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from retail_db.orders_bronze limit 5;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC describe history retail_db.orders_bronze;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC describe extended retail_db.orders_bronze;
