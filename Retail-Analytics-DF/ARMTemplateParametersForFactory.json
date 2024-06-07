@@ -5,17 +5,20 @@
 		"factoryName": {
 			"value": "Retail-Analytics-DF"
 		},
-		"AzureDataLakeStorage1_accountKey": {
-			"value": ""
-		},
-		"Retail_Analytics_ADLS_LS_accountKey": {
-			"value": ""
-		},
-		"AzureDataLakeStorage1_properties_typeProperties_url": {
-			"value": "https://retailanalyticssa.dfs.core.windows.net/"
+		"KV_LS_properties_typeProperties_baseUrl": {
+			"value": "https://Retail-Analytics-KV.vault.azure.net/"
 		},
 		"Retail_Analytics_ADLS_LS_properties_typeProperties_url": {
 			"value": "https://retailanalyticssa.dfs.core.windows.net/"
+		},
+		"SQL_LS_properties_typeProperties_server": {
+			"value": "retail-analytics-sql-server.database.windows.net"
+		},
+		"SQL_LS_properties_typeProperties_database": {
+			"value": "retail_sql_db"
+		},
+		"SQL_LS_properties_typeProperties_userName": {
+			"value": "retail_admin"
 		}
 	}
 }

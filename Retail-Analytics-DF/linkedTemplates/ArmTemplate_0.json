@@ -7,21 +7,25 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "Retail-Analytics-DF"
 		},
-		"AzureDataLakeStorage1_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
-		},
-		"Retail_Analytics_ADLS_LS_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'Retail_Analytics_ADLS_LS'"
-		},
-		"AzureDataLakeStorage1_properties_typeProperties_url": {
+		"KV_LS_properties_typeProperties_baseUrl": {
 			"type": "string",
-			"defaultValue": "https://retailanalyticssa.dfs.core.windows.net/"
+			"defaultValue": "https://Retail-Analytics-KV.vault.azure.net/"
 		},
 		"Retail_Analytics_ADLS_LS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://retailanalyticssa.dfs.core.windows.net/"
+		},
+		"SQL_LS_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "retail-analytics-sql-server.database.windows.net"
+		},
+		"SQL_LS_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "retail_sql_db"
+		},
+		"SQL_LS_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "retail_admin"
 		}
 	},
 	"variables": {
@@ -29,18 +33,14 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
+			"name": "[concat(parameters('factoryName'), '/KV_LS')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"type": "AzureBlobFS",
+				"type": "AzureKeyVault",
 				"typeProperties": {
-					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
-					}
+					"baseUrl": "[parameters('KV_LS_properties_typeProperties_baseUrl')]"
 				}
 			},
 			"dependsOn": []
@@ -55,12 +55,48 @@
 				"typeProperties": {
 					"url": "[parameters('Retail_Analytics_ADLS_LS_properties_typeProperties_url')]",
 					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('Retail_Analytics_ADLS_LS_accountKey')]"
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "KV_LS",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "sakey",
+						"secretVersion": "384c9f435221412782237961c6132b05"
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/KV_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_LS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('SQL_LS_properties_typeProperties_server')]",
+					"database": "[parameters('SQL_LS_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"hostNameInCertificate": "",
+					"authenticationType": "SQL",
+					"userName": "[parameters('SQL_LS_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "KV_LS",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "sql-pwd"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/KV_LS')]"
+			]
 		}
 	]
 }
