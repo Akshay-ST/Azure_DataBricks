@@ -51,6 +51,11 @@ df.write.mode("overwrite") \
 
 # COMMAND ----------
 
+# MAGIC %fs
+# MAGIC rm -r dbfs:/Azure_ast
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC show databases;
 
