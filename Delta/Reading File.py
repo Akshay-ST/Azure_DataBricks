@@ -42,17 +42,12 @@ df.write.mode("overwrite") \
   .format("delta") \
   .option("header",'true') \
   .option("delta.columnMapping.mode","name") \
-  .save('dbfs:/mnt/files2/orders_delta')
-
-# COMMAND ----------
-
-# MAGIC %fs
-# MAGIC ls dbfs:/mnt/files2/
+  .save('dbfs:/mnt/files2/nb0/orders_delta')
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from delta.`dbfs:/mnt/files2/orders_delta` limit 5;
+# MAGIC select * from delta.`dbfs:/mnt/files2/nb0/orders_delta` limit 5;
 
 # COMMAND ----------
 
@@ -60,7 +55,7 @@ df.write.mode("overwrite") \
 # MAGIC CREATE DATABASE IF NOT EXISTS retail_db2;
 # MAGIC CREATE TABLE IF NOT EXISTS retail_db2.orders_delta
 # MAGIC USING DELTA LOCATION 'dbfs:/user/hive/warehouse/retail_db2.db' AS
-# MAGIC   select * from delta.`dbfs:/mnt/files2/orders_delta`;
+# MAGIC   select * from delta.`dbfs:/mnt/files2/nb0/orders_delta`;
 # MAGIC
 # MAGIC ALTER TABLE retail_db2.orders_delta SET TBLPROPERTIES ('delta.columnMapping.mode' = 'name');
 # MAGIC

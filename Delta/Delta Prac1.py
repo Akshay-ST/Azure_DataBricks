@@ -1,8 +1,4 @@
 # Databricks notebook source
-dbutils.fs.help('unmount')
-
-# COMMAND ----------
-
 dbutils.fs.unmount('/mnt/files/')
 
 # COMMAND ----------
@@ -24,11 +20,15 @@ dbutils.fs.mount(
 
 # COMMAND ----------
 
-df = spark.read.csv('/mnt/files/orders.csv', header = True)
+df = spark.read \
+  .format("csv") \
+  .option("header","true") \
+  .option("inferSchema","true") \
+  .load('/mnt/files/orders.csv')
 
 # COMMAND ----------
 
-display(df)
+df.show(5)
 
 # COMMAND ----------
 
@@ -39,7 +39,7 @@ df.printSchema()
 df.write.mode("overwrite") \
   .partitionBy("order_status") \
   .format("parquet") \
-  .save("/mnt/files/parquet/orders.parquet")
+  .save("/mnt/files/nb1/parquet/orders.parquet")
 
 
 # COMMAND ----------
@@ -47,12 +47,12 @@ df.write.mode("overwrite") \
 df.write.mode("overwrite") \
   .partitionBy("order_status") \
   .format("delta") \
-  .save("/mnt/files/delta/orders.delta")
+  .save("/mnt/files/nb1/delta/orders.delta")
 
 # COMMAND ----------
 
 # MAGIC %fs
-# MAGIC rm -r dbfs:/Azure_ast
+# MAGIC rm -r dbfs:/mnt/files3
 
 # COMMAND ----------
 
@@ -68,17 +68,12 @@ df.write.mode("overwrite") \
 
 # MAGIC %sql 
 # MAGIC create table retail_db.orders_parquet 
-# MAGIC USING PARQUET LOCATION '/mnt/files/parquet/orders.parquet/o*'
-
-# COMMAND ----------
-
-# MAGIC %sql 
-# MAGIC drop table retail_db.orders_parquet
+# MAGIC USING PARQUET LOCATION '/mnt/files/nb1/parquet/orders.parquet/*'
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from retail_db.orders_parquet limit 10;
+# MAGIC select * from retail_db.orders_parquet limit 5;
 
 # COMMAND ----------
 
@@ -89,12 +84,12 @@ df.write.mode("overwrite") \
 
 # MAGIC %sql 
 # MAGIC create table retail_db.orders_delta 
-# MAGIC USING DELTA LOCATION '/mnt/files/delta/orders.delta'
+# MAGIC USING DELTA LOCATION '/mnt/files/nb1/delta/orders.delta'
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from retail_db.orders_delta limit 10;
+# MAGIC select * from retail_db.orders_delta limit 5;
 
 # COMMAND ----------
 
