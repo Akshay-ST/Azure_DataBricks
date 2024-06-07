@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "Retail-Analytics-DF"
 		},
+		"HTTP_LS_properties_typeProperties_url": {
+			"value": "https://files.cdn.thinkific.com/"
+		},
 		"KV_LS_properties_typeProperties_baseUrl": {
 			"value": "https://Retail-Analytics-KV.vault.azure.net/"
 		},

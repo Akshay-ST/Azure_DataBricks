@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "Retail-Analytics-DF"
 		},
+		"HTTP_LS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://files.cdn.thinkific.com/"
+		},
 		"KV_LS_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://Retail-Analytics-KV.vault.azure.net/"
@@ -171,6 +175,21 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/SQL_LS')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HTTP_LS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('HTTP_LS_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": false,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/KV_LS')]",
