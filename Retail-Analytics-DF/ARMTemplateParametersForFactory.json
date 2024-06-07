@@ -11,10 +11,7 @@
 		"KV_LS_properties_typeProperties_baseUrl": {
 			"value": "https://Retail-Analytics-KV.vault.azure.net/"
 		},
-		"Retail_Analytics_ADLS_2_LS_properties_typeProperties_url": {
-			"value": "https://retailanalyticssa.dfs.core.windows.net"
-		},
-		"Retail_Analytics_ADLS_LS_properties_typeProperties_url": {
+		"LS_ADLS_properties_typeProperties_url": {
 			"value": "https://retailanalyticssa.dfs.core.windows.net/"
 		},
 		"SQL_LS_properties_typeProperties_server": {

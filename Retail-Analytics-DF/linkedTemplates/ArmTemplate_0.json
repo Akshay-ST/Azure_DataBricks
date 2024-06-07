@@ -15,11 +15,7 @@
 			"type": "string",
 			"defaultValue": "https://Retail-Analytics-KV.vault.azure.net/"
 		},
-		"Retail_Analytics_ADLS_2_LS_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://retailanalyticssa.dfs.core.windows.net"
-		},
-		"Retail_Analytics_ADLS_LS_properties_typeProperties_url": {
+		"LS_ADLS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://retailanalyticssa.dfs.core.windows.net/"
 		},
@@ -113,14 +109,14 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Retail_Analytics_ADLS_2_LS')]",
+			"name": "[concat(parameters('factoryName'), '/LS_ADLS')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
 				"type": "AzureBlobFS",
 				"typeProperties": {
-					"url": "[parameters('Retail_Analytics_ADLS_2_LS_properties_typeProperties_url')]",
+					"url": "[parameters('LS_ADLS_properties_typeProperties_url')]",
 					"accountKey": {
 						"type": "AzureKeyVaultSecret",
 						"store": {
@@ -128,30 +124,6 @@
 							"type": "LinkedServiceReference"
 						},
 						"secretName": "sakey"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/KV_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Retail_Analytics_ADLS_LS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('Retail_Analytics_ADLS_LS_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "KV_LS",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "sakey",
-						"secretVersion": "384c9f435221412782237961c6132b05"
 					}
 				}
 			},
@@ -189,12 +161,12 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_ADLS_OUT_CSV')]",
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_OUTPUT_CSV')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Retail_Analytics_ADLS_LS",
+					"referenceName": "LS_ADLS",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -213,16 +185,16 @@
 				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Retail_Analytics_ADLS_LS')]"
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_ADLS_OUT_CSV_TAB')]",
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_OUTPUT_CSV_TAB')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Retail_Analytics_ADLS_2_LS",
+					"referenceName": "LS_ADLS",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -241,7 +213,7 @@
 				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Retail_Analytics_ADLS_2_LS')]"
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
 			]
 		},
 		{
@@ -344,7 +316,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "DS_ADLS_OUT_CSV_TAB",
+								"referenceName": "DS_ADLS_OUTPUT_CSV_TAB",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -358,7 +330,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_HTTP_IN')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ADLS_OUT_CSV_TAB')]"
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_OUTPUT_CSV_TAB')]"
 			]
 		},
 		{
@@ -415,7 +387,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "DS_ADLS_OUT_CSV",
+								"referenceName": "DS_ADLS_OUTPUT_CSV",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -429,7 +401,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_SQL_IN')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ADLS_OUT_CSV')]"
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_OUTPUT_CSV')]"
 			]
 		}
 	]
