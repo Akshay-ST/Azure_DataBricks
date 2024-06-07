@@ -92,14 +92,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "HTTP_DS",
+								"referenceName": "DS_HTTP_IN",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "ADLS_CSV_2_DS",
+								"referenceName": "DS_ADLS_OUT_CSV_TAB",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -112,8 +112,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/HTTP_DS')]",
-				"[concat(variables('factoryId'), '/datasets/ADLS_CSV_2_DS')]"
+				"[concat(variables('factoryId'), '/datasets/DS_HTTP_IN')]",
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_OUT_CSV_TAB')]"
 			]
 		},
 		{
@@ -163,14 +163,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "SQL_DS",
+								"referenceName": "DS_SQL_IN",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "ADLS_CSV_DS",
+								"referenceName": "DS_ADLS_OUT_CSV",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -183,40 +183,12 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SQL_DS')]",
-				"[concat(variables('factoryId'), '/datasets/ADLS_CSV_DS')]"
+				"[concat(variables('factoryId'), '/datasets/DS_SQL_IN')]",
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_OUT_CSV')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ADLS_CSV_2_DS')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Retail_Analytics_ADLS_2_LS",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "output",
-						"fileSystem": "data"
-					},
-					"columnDelimiter": "\t",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Retail_Analytics_ADLS_2_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ADLS_CSV_DS')]",
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_OUT_CSV')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -244,7 +216,35 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/HTTP_DS')]",
+			"name": "[concat(parameters('factoryName'), '/DS_ADLS_OUT_CSV_TAB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Retail_Analytics_ADLS_2_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "output",
+						"fileSystem": "data"
+					},
+					"columnDelimiter": "\t",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Retail_Analytics_ADLS_2_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_HTTP_IN')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -288,7 +288,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SQL_DS')]",
+			"name": "[concat(parameters('factoryName'), '/DS_SQL_IN')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
