@@ -15,6 +15,10 @@
 			"type": "string",
 			"defaultValue": "https://Retail-Analytics-KV.vault.azure.net/"
 		},
+		"Retail_Analytics_ADLS_2_LS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://retailanalyticssa.dfs.core.windows.net"
+		},
 		"Retail_Analytics_ADLS_LS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://retailanalyticssa.dfs.core.windows.net/"
@@ -63,6 +67,9 @@
 					},
 					"KV_LS_properties_typeProperties_baseUrl": {
 						"value": "[parameters('KV_LS_properties_typeProperties_baseUrl')]"
+					},
+					"Retail_Analytics_ADLS_2_LS_properties_typeProperties_url": {
+						"value": "[parameters('Retail_Analytics_ADLS_2_LS_properties_typeProperties_url')]"
 					},
 					"Retail_Analytics_ADLS_LS_properties_typeProperties_url": {
 						"value": "[parameters('Retail_Analytics_ADLS_LS_properties_typeProperties_url')]"
