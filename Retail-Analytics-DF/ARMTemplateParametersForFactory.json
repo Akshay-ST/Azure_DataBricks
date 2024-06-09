@@ -22,6 +22,9 @@
 		},
 		"SQL_LS_properties_typeProperties_userName": {
 			"value": "retail_admin"
+		},
+		"Trigger_Retail_Products_properties_typeProperties_scope": {
+			"value": "/subscriptions/74cc1de9-b641-4a2d-89b5-e3a1dbc410ab/resourceGroups/Retail_Analytics/providers/Microsoft.Storage/storageAccounts/retailanalyticssa"
 		}
 	}
 }

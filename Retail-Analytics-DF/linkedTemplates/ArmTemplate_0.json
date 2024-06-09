@@ -30,6 +30,10 @@
 		"SQL_LS_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "retail_admin"
+		},
+		"Trigger_Retail_Products_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/74cc1de9-b641-4a2d-89b5-e3a1dbc410ab/resourceGroups/Retail_Analytics/providers/Microsoft.Storage/storageAccounts/retailanalyticssa"
 		}
 	},
 	"variables": {
@@ -741,6 +745,36 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/DataFlow_Orders')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Trigger_Retail_Products')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "PL_Retail_Products",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/retail-dataset/blobs/raw",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('Trigger_Retail_Products_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Retail_Products')]"
 			]
 		}
 	]
