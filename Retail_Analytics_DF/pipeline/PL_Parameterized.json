@@ -48,8 +48,18 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DS_HTTP_IN",
-						"type": "DatasetReference"
+						"referenceName": "DS_HTTP_IN_PARAM",
+						"type": "DatasetReference",
+						"parameters": {
+							"baseURL": {
+								"value": "@pipeline().parameters.baseURL",
+								"type": "Expression"
+							},
+							"relativeURL": {
+								"value": "@pipeline().parameters.relativeURL",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
@@ -60,6 +70,17 @@
 				]
 			}
 		],
+		"parameters": {
+			"baseURL": {
+				"type": "string"
+			},
+			"relativeURL": {
+				"type": "string"
+			},
+			"filename": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
