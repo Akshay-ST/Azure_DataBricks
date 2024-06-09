@@ -3,8 +3,22 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Ingest_Retail_Products",
-				"type": "Copy",
+				"name": "Validation1",
+				"type": "Validation",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "DS_Retail_Raw_CSV",
+						"type": "DatasetReference"
+					},
+					"timeout": "0.00:00:30",
+					"sleep": 10
+				}
+			},
+			{
+				"name": "Products_Metadata",
+				"type": "GetMetadata",
 				"dependsOn": [
 					{
 						"activity": "Validation1",
@@ -14,7 +28,7 @@
 					}
 				],
 				"policy": {
-					"timeout": "0.12:00:00",
+					"timeout": "0.00:10:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -22,62 +36,101 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
-					},
-					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
-						}
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "DS_Retail_Raw_CSV",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "DS_Retail_Target_CSV",
-						"type": "DatasetReference"
-					}
-				]
-			},
-			{
-				"name": "Validation1",
-				"type": "Validation",
-				"dependsOn": [],
-				"typeProperties": {
 					"dataset": {
 						"referenceName": "DS_Retail_Raw_CSV",
 						"type": "DatasetReference"
 					},
-					"timeout": "0.00:00:30",
-					"sleep": 10
+					"fieldList": [
+						"exists",
+						"columnCount",
+						"size"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Products_MetaData_check",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Products_Metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('Products_Metadata').output.columnCount,6)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Ingest_Retail_Products",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_Retail_Raw_CSV",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_Retail_Target_CSV",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
 				}
 			}
 		],
