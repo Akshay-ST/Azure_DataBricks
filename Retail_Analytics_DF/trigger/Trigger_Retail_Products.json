@@ -2,7 +2,7 @@
 	"name": "Trigger_Retail_Products",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
