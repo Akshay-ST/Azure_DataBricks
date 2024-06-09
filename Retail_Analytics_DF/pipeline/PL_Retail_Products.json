@@ -6,7 +6,6 @@
 				"name": "Validation1",
 				"type": "Validation",
 				"dependsOn": [],
-				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "DS_Retail_Raw_CSV",
