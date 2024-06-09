@@ -14,6 +14,9 @@
 		"LS_ADLS_properties_typeProperties_url": {
 			"value": "https://retailanalyticssa.dfs.core.windows.net/"
 		},
+		"LS_HTTP_param_properties_typeProperties_url": {
+			"value": "@{linkedService().baseURL}"
+		},
 		"SQL_LS_properties_typeProperties_server": {
 			"value": "retail-analytics-sql-server.database.windows.net"
 		},
