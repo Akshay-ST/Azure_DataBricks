@@ -47,6 +47,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -68,9 +69,24 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(activity('Products_Metadata').output.columnCount,6)",
+						"value": "@equals(activity('Products_Metadata').output.columnCount,5)",
 						"type": "Expression"
 					},
+					"ifFalseActivities": [
+						{
+							"name": "Fail1",
+							"type": "Fail",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"message": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								},
+								"errorCode": "404"
+							}
+						}
+					],
 					"ifTrueActivities": [
 						{
 							"name": "Ingest_Retail_Products",
