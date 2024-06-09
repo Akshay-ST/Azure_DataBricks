@@ -698,7 +698,7 @@
 				"type": "BlobEventsTrigger",
 				"typeProperties": {
 					"blobPathBeginsWith": "/retail-dataset/blobs/raw/",
-					"blobPathEndsWith": ".csv",
+					"blobPathEndsWith": "products.csv",
 					"ignoreEmptyBlobs": true,
 					"scope": "[parameters('Trigger_Retail_Products_properties_typeProperties_scope')]",
 					"events": [
