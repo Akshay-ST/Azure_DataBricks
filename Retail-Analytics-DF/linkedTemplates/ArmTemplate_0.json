@@ -540,6 +540,46 @@
 											"parameters": {}
 										}
 									]
+								},
+								{
+									"name": "Delete_raw_products",
+									"type": "Delete",
+									"dependsOn": [
+										{
+											"activity": "Ingest_Retail_Products",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.00:10:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "DS_Retail_Raw_CSV",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"logStorageSettings": {
+											"linkedServiceName": {
+												"referenceName": "LS_ADLS",
+												"type": "LinkedServiceReference"
+											},
+											"path": "retail-dataset"
+										},
+										"enableLogging": true,
+										"storeSettings": {
+											"type": "AzureBlobFSReadSettings",
+											"recursive": true,
+											"enablePartitionDiscovery": false
+										}
+									}
 								}
 							]
 						}
@@ -552,7 +592,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_Retail_Raw_CSV')]",
-				"[concat(variables('factoryId'), '/datasets/DS_Retail_Target_CSV')]"
+				"[concat(variables('factoryId'), '/datasets/DS_Retail_Target_CSV')]",
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
 			]
 		},
 		{
