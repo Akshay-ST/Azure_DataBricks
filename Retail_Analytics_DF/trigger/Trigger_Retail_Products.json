@@ -1,0 +1,24 @@
+{
+	"name": "Trigger_Retail_Products",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "PL_Retail_Products",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/retail-dataset/blobs/raw",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/74cc1de9-b641-4a2d-89b5-e3a1dbc410ab/resourceGroups/Retail_Analytics/providers/Microsoft.Storage/storageAccounts/retailanalyticssa",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
