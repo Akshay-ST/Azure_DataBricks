@@ -918,7 +918,7 @@
 				"type": "HttpServer",
 				"typeProperties": {
 					"url": "[parameters('LS_HTTP_param_properties_typeProperties_url')]",
-					"enableServerCertificateValidation": true,
+					"enableServerCertificateValidation": false,
 					"authenticationType": "Anonymous"
 				}
 			},
