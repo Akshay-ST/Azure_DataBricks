@@ -7,18 +7,42 @@
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "0.12:00:00",
+					"timeout": "0.00:10:00",
 					"retry": 0,
-					"retryIntervalInSeconds": 30,
+					"retryIntervalInSeconds": 10,
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "DS_ADLS_DATA_INPUT",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "ForEach",
 				"type": "ForEach",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"activities": [
@@ -69,7 +93,17 @@
 							"inputs": [
 								{
 									"referenceName": "DS_HTTP_IN_PARAM",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"baseURL": {
+											"value": "@activity('Lookup1').output.baseURL",
+											"type": "Expression"
+										},
+										"relativeURL": {
+											"value": "@activity('Lookup1').output.relativeURL",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
@@ -83,6 +117,17 @@
 				}
 			}
 		],
+		"parameters": {
+			"baseURL": {
+				"type": "string"
+			},
+			"relativeURL": {
+				"type": "string"
+			},
+			"filename": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
