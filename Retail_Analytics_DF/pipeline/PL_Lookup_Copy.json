@@ -122,17 +122,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"baseURL": {
-				"type": "string"
-			},
-			"relativeURL": {
-				"type": "string"
-			},
-			"filename": {
-				"type": "string"
-			}
-		},
 		"annotations": []
 	}
 }
