@@ -86,13 +86,33 @@
 					},
 					"SQL_LS_properties_typeProperties_userName": {
 						"value": "[parameters('SQL_LS_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "Retail-Analytics-DF_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"Trigger_Retail_Products_properties_typeProperties_scope": {
 						"value": "[parameters('Trigger_Retail_Products_properties_typeProperties_scope')]"
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'Retail-Analytics-DF_ArmTemplate_0')]"
+			]
 		}
 	]
 }
