@@ -175,17 +175,6 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
-				"parameters": {
-					"baseURL": {
-						"type": "string"
-					},
-					"relativeURL": {
-						"type": "string"
-					},
-					"filename": {
-						"type": "string"
-					}
-				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1142,6 +1131,36 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/KV_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Trigger_LoopUp_Schedule')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "PL_Lookup_Copy",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 15,
+						"startTime": "2024-06-11T07:21:00",
+						"timeZone": "GMT Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Lookup_Copy')]"
 			]
 		},
 		{
